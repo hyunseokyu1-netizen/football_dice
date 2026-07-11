@@ -147,33 +147,17 @@ class _MpGameScreenState extends State<MpGameScreen> {
                 children: [
                   Column(
                     children: [
-                      Row(
-                        children: [
-                          Expanded(
-                            child: ScoreBoard(
-                              state: s,
-                              homeLabel: me == Team.home
-                                  ? loc.youLabel(homeName)
-                                  : loc.friendLabel(homeName),
-                              awayLabel: me == Team.away
-                                  ? loc.youLabel(awayName)
-                                  : loc.friendLabel(awayName),
-                            ),
-                          ),
-                          IconButton(
-                            onPressed: () => setState(
-                              () => SoundService.instance.muted =
-                                  !SoundService.instance.muted,
-                            ),
-                            icon: Icon(
-                              SoundService.instance.muted
-                                  ? Icons.volume_off
-                                  : Icons.volume_up,
-                              color: Colors.white38,
-                              size: 20,
-                            ),
-                          ),
-                        ],
+                      SizedBox(
+                        width: double.infinity,
+                        child: ScoreBoard(
+                          state: s,
+                          homeLabel: me == Team.home
+                              ? loc.youLabel(homeName)
+                              : loc.friendLabel(homeName),
+                          awayLabel: me == Team.away
+                              ? loc.youLabel(awayName)
+                              : loc.friendLabel(awayName),
+                        ),
                       ),
                       const SizedBox(height: 8),
                       FieldView(

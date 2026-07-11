@@ -33,6 +33,7 @@ abstract class L10n {
   String get difficultyNormal;
   String get difficultyHard;
   String get effectsLabel;
+  String get soundLabel;
   String get cardInfoTooltip;
 
   // ---- 멀티플레이 ----
@@ -209,6 +210,8 @@ class L10nKo extends L10n {
   String get difficultyHard => '어려움';
   @override
   String get effectsLabel => '주사위·카드 연출';
+  @override
+  String get soundLabel => '효과음';
   @override
   String get cardInfoTooltip => '선택한 카드 정보';
 
@@ -575,6 +578,8 @@ class L10nEn extends L10n {
   String get difficultyHard => 'Hard';
   @override
   String get effectsLabel => 'Dice & card effects';
+  @override
+  String get soundLabel => 'Sound effects';
   @override
   String get cardInfoTooltip => 'Selected card info';
 
