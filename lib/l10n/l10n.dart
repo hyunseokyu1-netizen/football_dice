@@ -28,6 +28,10 @@ abstract class L10n {
   String get newGame;
   String get howToPlay;
   String get howToPlayBody;
+  String get howToPlayBody2;
+  String get howToPlayExampleTitle;
+  String get howToPlayExampleDice;
+  String get howToPlayExampleResult;
   String get close;
   String get difficultyEasy;
   String get difficultyNormal;
@@ -60,6 +64,7 @@ abstract class L10n {
   String oppRevealOffense(String name);
   String defensePanelTitleMp(int down, int yards);
   String get defenseTwoPointTitleMp;
+  String get timeUpAutoPick;
 
   // ---- 스코어보드 / 공용 ----
   String get homeTeamLabel;
@@ -262,6 +267,8 @@ class L10nKo extends L10n {
       '수비 게임플랜 — 상대의 $down번째 다운 ($yards야드)';
   @override
   String get defenseTwoPointTitleMp => '상대의 2점 컨버전 — 수비 대형을 선택하세요';
+  @override
+  String get timeUpAutoPick => '시간 초과! 자동으로 선택했습니다';
 
   @override
   String get howToPlayBody => '🏈 목표\n'
@@ -279,11 +286,19 @@ class L10nKo extends L10n {
       '· 수비 D10(파랑): 반칙 판정 전용. 양팀 D10 합이 6 또는 16이면 '
       '패널티가 발생합니다. (단, 두 주사위가 같은 눈이면 상쇄)\n'
       '· D12 두 개(보라): 양팀이 하나씩 굴려 합(2~24)으로 차트의 '
-      '열(가로)을 결정합니다.\n'
-      '예) 공격 D10이 9인데 수비 보정 -2를 받으면 7 → "7-8" 행, '
-      'D12 합이 14면 "13-15" 열. 그 교차점의 숫자만큼 전진합니다. '
-      '판정 후 "차트 보기"를 누르면 짚은 칸이 표시됩니다.\n\n'
-      '🎯 득점\n'
+      '열(가로)을 결정합니다.';
+
+  @override
+  String get howToPlayExampleTitle => '📖 예시 — 숏 패스 카드';
+  @override
+  String get howToPlayExampleDice =>
+      '공격 D10 9 − 수비 보정 2 = 7 → "7-8" 행\nD12 합 6+8=14 → "13-15" 열';
+  @override
+  String get howToPlayExampleResult =>
+      '교차점은 6 → 6야드 전진!\n판정 후 "차트 보기"를 누르면 이렇게 짚은 칸이 표시됩니다.';
+
+  @override
+  String get howToPlayBody2 => '🎯 득점\n'
       '· 터치다운: 6점 (+추가 킥 1점 또는 2점 컨버전 2점)\n'
       '· 필드골: 3점 (59야드 이내에서 시도 가능)\n'
       '· 세이프티: 2점\n\n'
@@ -291,6 +306,11 @@ class L10nKo extends L10n {
       '· 4번째 다운에 전진이 어려우면 펀트로 상대를 밀어내세요.\n'
       '· 인터셉트/펌블이 나오면 공격권이 넘어갈 수 있습니다.\n'
       '· 양팀 10면체 주사위 합이 6 또는 16이면 패널티!\n\n'
+      '⏱ 친구와 대전 시간 제한\n'
+      '· 네트워크 대전에서는 매 선택마다 15초의 제한 시간이 있습니다.\n'
+      '· 5초가 남으면 카운트다운이 표시됩니다.\n'
+      '· 시간이 지나면 자동으로 진행됩니다 (공격/수비: 추천 카드, '
+      '킥오프: 일반 킥, 리턴: 터치백, 추가 득점: 킥).\n\n'
       '💡 팁\n'
       '카드를 길게 누르면 상세 차트와 보정치를 볼 수 있습니다.';
 
@@ -633,6 +653,8 @@ class L10nEn extends L10n {
   @override
   String get defenseTwoPointTitleMp =>
       'Opponent goes for two — pick a formation';
+  @override
+  String get timeUpAutoPick => "Time's up! A play was picked automatically";
 
   @override
   String get howToPlayBody => '🏈 Goal\n'
@@ -652,11 +674,21 @@ class L10nEn extends L10n {
       '· Defense D10 (blue): penalty check only. If both D10s sum to 6 or '
       '16, a penalty occurs. (Equal dice cancel it out)\n'
       '· Two D12s (purple): one per team; their sum (2-24) picks the '
-      'chart column.\n'
-      'e.g. Offense D10 of 9 with a -2 modifier becomes 7 → row "7-8"; '
-      'D12 sum of 14 → column "13-15". The cell at that intersection is '
-      'your gain. Tap "View chart" after a play to see the exact cell.\n\n'
-      '🎯 Scoring\n'
+      'chart column.';
+
+  @override
+  String get howToPlayExampleTitle => '📖 Example — Short Pass card';
+  @override
+  String get howToPlayExampleDice =>
+      'Offense D10 9 − defense modifier 2 = 7 → row "7-8"\n'
+      'D12 sum 6+8=14 → column "13-15"';
+  @override
+  String get howToPlayExampleResult =>
+      'The intersection is 6 → gain 6 yards!\n'
+      'Tap "View chart" after a play to see the cell like this.';
+
+  @override
+  String get howToPlayBody2 => '🎯 Scoring\n'
       '· Touchdown: 6 pts (+1 extra kick or +2 two-point conversion)\n'
       '· Field goal: 3 pts (within 59 yards)\n'
       '· Safety: 2 pts\n\n'
@@ -664,6 +696,12 @@ class L10nEn extends L10n {
       '· Stuck on 4th down? Punt to push the opponent back.\n'
       '· Interceptions and fumbles can turn the ball over.\n'
       '· If both D10 dice sum to 6 or 16 — penalty!\n\n'
+      '⏱ Time limit (friend matches)\n'
+      '· In network games every decision has a 15-second limit.\n'
+      '· A countdown appears when 5 seconds remain.\n'
+      '· When time runs out the game picks for you (offense/defense: '
+      'suggested card, kickoff: normal kick, return: touchback, '
+      'extra point: kick).\n\n'
       '💡 Tip\n'
       'Long-press any card to see its full chart and modifiers.';
 

@@ -25,6 +25,12 @@ class MpGameScreen extends StatefulWidget {
 }
 
 class _MpGameScreenState extends State<MpGameScreen> {
+  /// 네트워크 대전 턴 제한 (초)
+  static const int kTurnLimitSeconds = 15;
+
+  /// 남은 시간이 이 값 이하면 카운트다운 표시
+  static const int kCountdownThreshold = 5;
+
   MpSession get session => widget.session;
   GameState get s => session.state;
   Team get me => session.myTeam;
@@ -37,15 +43,21 @@ class _MpGameScreenState extends State<MpGameScreen> {
   String? selectedOffense;
   String? selectedDefense;
 
+  Timer? _turnTicker;
+  int _remaining = kTurnLimitSeconds;
+  String? _decisionKey;
+
   @override
   void initState() {
     super.initState();
     _seenVersion = session.version;
     _sub = session.updates.listen((_) => _onUpdate());
+    _syncTurnTimer();
   }
 
   @override
   void dispose() {
+    _turnTicker?.cancel();
     _sub?.cancel();
     session.dispose();
     super.dispose();
@@ -54,6 +66,8 @@ class _MpGameScreenState extends State<MpGameScreen> {
   void _onUpdate() {
     if (!mounted) return;
     if (session.error != null) {
+      _turnTicker?.cancel();
+      _turnTicker = null;
       _showDisconnected();
       return;
     }
@@ -70,8 +84,88 @@ class _MpGameScreenState extends State<MpGameScreen> {
         flybyVisible = false;
       }
     }
+    _syncTurnTimer();
     setState(() {});
   }
+
+  // ---------------------------------------------------------------------
+  // 턴 제한 타이머
+  // ---------------------------------------------------------------------
+
+  /// 지금 내가 내려야 할 결정이 있으면, 시간 초과 시 실행할 기본 행동을 돌려준다.
+  VoidCallback? _pendingAutoAction() {
+    if (session.error != null) return null;
+    switch (s.phase) {
+      case GamePhase.gameOver:
+        return null;
+      case GamePhase.kickoff:
+        if (s.kickingTeam != me) return null;
+        return () => session.chooseKickoff(onside: false);
+      case GamePhase.returnChoice:
+        if (s.possession != me) return null;
+        return () => session.chooseReturn(touchback: true);
+      case GamePhase.play:
+        if (session.iSubmitted) return null;
+        return s.possession == me
+            ? () => _autoPickOffense(false)
+            : () => _autoPickDefense(false);
+      case GamePhase.extraPoint:
+        if (session.awaiting2pt) {
+          if (session.iSubmitted) return null;
+          return s.possession == me
+              ? () => _autoPickOffense(true)
+              : () => _autoPickDefense(true);
+        }
+        if (s.possession != me) return null;
+        return () => session.chooseExtraPoint(twoPoint: false);
+    }
+  }
+
+  void _autoPickOffense(bool twoPoint) {
+    final id = selectedOffense ?? _suggestedOffense(twoPoint).first.id;
+    session.chooseOffense(id);
+  }
+
+  void _autoPickDefense(bool twoPoint) {
+    final id = selectedDefense ?? _suggestedDefense(twoPoint).first.id;
+    session.chooseDefense(id);
+  }
+
+  /// 결정 상황이 바뀌었으면 타이머를 새로 시작하고, 결정할 게 없으면 멈춘다.
+  void _syncTurnTimer() {
+    final pending = _pendingAutoAction() != null;
+    final key = pending
+        ? '${session.version}:${s.phase.name}:${session.awaiting2pt}'
+        : null;
+    if (key == _decisionKey) return;
+    _decisionKey = key;
+    _turnTicker?.cancel();
+    _turnTicker = null;
+    if (key == null) return;
+    _remaining = kTurnLimitSeconds;
+    _turnTicker = Timer.periodic(const Duration(seconds: 1), (_) {
+      if (!mounted) return;
+      setState(() => _remaining--);
+      if (_remaining <= 0) {
+        _turnTicker?.cancel();
+        _turnTicker = null;
+        _decisionKey = null;
+        final action = _pendingAutoAction();
+        if (action != null) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(loc.timeUpAutoPick),
+              duration: const Duration(seconds: 2),
+            ),
+          );
+          action();
+        }
+      }
+    });
+  }
+
+  bool get _countdownVisible =>
+      _turnTicker != null && _remaining <= kCountdownThreshold;
 
   void _showDisconnected() {
     if (_errorShown || !mounted) return;
@@ -327,13 +421,40 @@ class _MpGameScreenState extends State<MpGameScreen> {
       ),
       child: Column(
         children: [
-          Text(
-            title,
-            style: const TextStyle(
-              color: kGold,
-              fontWeight: FontWeight.bold,
-              fontSize: 14,
-            ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Flexible(
+                child: Text(
+                  title,
+                  style: const TextStyle(
+                    color: kGold,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 14,
+                  ),
+                ),
+              ),
+              if (_countdownVisible) ...[
+                const SizedBox(width: 8),
+                Container(
+                  width: 26,
+                  height: 26,
+                  alignment: Alignment.center,
+                  decoration: const BoxDecoration(
+                    color: Color(0xFFC62828),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Text(
+                    '$_remaining',
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14,
+                    ),
+                  ),
+                ),
+              ],
+            ],
           ),
           const SizedBox(height: 8),
           Expanded(child: child),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'data/cards.dart';
 import 'engine/ai.dart';
 import 'l10n/l10n.dart';
 import 'ui/game_screen.dart';
@@ -262,19 +263,133 @@ class _HomeScreenState extends State<HomeScreen> {
           style: const TextStyle(color: kGold, fontWeight: FontWeight.bold),
         ),
         content: SingleChildScrollView(
-          child: Text(
-            loc.howToPlayBody,
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 13,
-              height: 1.4,
-            ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                loc.howToPlayBody,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 13,
+                  height: 1.4,
+                ),
+              ),
+              const SizedBox(height: 12),
+              const _HowToPlayExample(),
+              const SizedBox(height: 12),
+              Text(
+                loc.howToPlayBody2,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 13,
+                  height: 1.4,
+                ),
+              ),
+            ],
           ),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
             child: Text(loc.close, style: const TextStyle(color: kGold)),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// 게임 방법 다이얼로그의 주사위 → 차트 예시.
+///
+/// 숏 패스 카드로 "공격 D10 9, 수비 보정 -2, D12 합 14" 상황을
+/// 실제 게임과 같은 모양의 주사위 칩과 [ChartTable]로 보여준다.
+class _HowToPlayExample extends StatelessWidget {
+  const _HowToPlayExample();
+
+  Widget _die(String label, int value, Color color) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 4),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: 34,
+            height: 34,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: color,
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: Colors.white24),
+            ),
+            child: Text(
+              '$value',
+              style: const TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
+              ),
+            ),
+          ),
+          Text(
+            label,
+            style: const TextStyle(color: Colors.white54, fontSize: 9),
+          ),
+        ],
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final card = offenseById('short_pass');
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        color: const Color(0xFF1A1A1A),
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(color: Colors.white12),
+      ),
+      child: Column(
+        children: [
+          Text(
+            loc.howToPlayExampleTitle,
+            style: const TextStyle(
+              color: kGold,
+              fontWeight: FontWeight.bold,
+              fontSize: 13,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              _die(loc.offD10Label, 9, const Color(0xFFC62828)),
+              _die(loc.defD10Label, 5, const Color(0xFF283593)),
+              _die('D12', 6, const Color(0xFFAD1457)),
+              _die('D12', 8, const Color(0xFF4527A0)),
+            ],
+          ),
+          const SizedBox(height: 8),
+          Text(
+            loc.howToPlayExampleDice,
+            textAlign: TextAlign.center,
+            style: const TextStyle(color: Colors.white70, fontSize: 11),
+          ),
+          const SizedBox(height: 8),
+          FittedBox(
+            child: ChartTable(
+              chart: card.chart,
+              highlightRow: rowIndex(9 - 2),
+              highlightCol: columnIndex(6 + 8),
+            ),
+          ),
+          const SizedBox(height: 6),
+          Text(
+            loc.howToPlayExampleResult,
+            textAlign: TextAlign.center,
+            style: const TextStyle(color: Color(0xFFFFE082), fontSize: 11),
           ),
         ],
       ),
