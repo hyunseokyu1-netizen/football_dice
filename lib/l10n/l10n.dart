@@ -39,6 +39,8 @@ abstract class L10n {
   String get effectsLabel;
   String get soundLabel;
   String get cardInfoTooltip;
+  String get settingsTitle;
+  String get languageLabel;
 
   // ---- 멀티플레이 ----
   String get mpButton;
@@ -219,6 +221,10 @@ class L10nKo extends L10n {
   String get soundLabel => '효과음';
   @override
   String get cardInfoTooltip => '선택한 카드 정보';
+  @override
+  String get settingsTitle => '설정';
+  @override
+  String get languageLabel => '언어';
 
   @override
   String get mpButton => '친구와 대전 (같은 Wi-Fi)';
@@ -602,6 +608,10 @@ class L10nEn extends L10n {
   String get soundLabel => 'Sound effects';
   @override
   String get cardInfoTooltip => 'Selected card info';
+  @override
+  String get settingsTitle => 'Settings';
+  @override
+  String get languageLabel => 'Language';
 
   @override
   String get mpButton => 'Play with a friend (same Wi-Fi)';
