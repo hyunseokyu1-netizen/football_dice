@@ -2,6 +2,41 @@
 
 ---
 
+## v1.1.0 (2026-07-19)
+
+### Play Console 릴리즈 노트 (What's new)
+
+**한국어 (500자 이하)**
+```
+친구와 대전이 더 팽팽해졌습니다!
+
+- 네트워크 대전에 15초 턴 제한 추가 — 5초 남으면 카운트다운 표시
+- 시간이 지나면 자동으로 진행 (공격/수비: 추천 카드, 킥오프: 일반 킥, 리턴: 터치백, 추가 득점: 킥)
+- 게임 방법에 주사위·차트 읽는 법 시각 예시 추가
+```
+
+**English (500 chars max)**
+```
+Friend matches just got more intense!
+
+- 15-second turn limit in network games — a countdown appears at 5 seconds
+- When time runs out the game picks for you (offense/defense: suggested card, kickoff: normal kick, return: touchback, extra point: kick)
+- How to Play now includes a visual dice & chart example
+```
+
+### 변경 사항 / Changes
+- 친구와 대전(로컬 Wi-Fi)에서 매 선택마다 15초 제한 시간 적용, 5초부터 빨간 카운트다운 표시
+- 시간 초과 시 자동 선택으로 게임이 멈추지 않고 진행
+- 게임 방법 다이얼로그에 실제 게임 위젯을 재사용한 주사위 4개 → 차트 교차점 예시(숏 패스 카드) 추가
+- 게임 방법에 시간 제한 규칙 안내 추가 (한국어/영어)
+
+### 빌드
+- versionCode: 2
+- versionName: 1.1.0
+- AAB: `~/Documents/workspace/apk_build_files/football_dice/v1.1.0/app-release.aab`
+
+---
+
 ## v1.0.0 (2026-07-11)
 
 ### Play Console 릴리즈 노트 (What's new)
