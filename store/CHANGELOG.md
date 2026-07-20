@@ -2,6 +2,40 @@
 
 ---
 
+## v1.2.0 (2026-07-20)
+
+### Play Console 릴리즈 노트 (What's new)
+
+**한국어 (500자 이하)**
+```
+설정 화면이 새로 생겼습니다!
+
+- 언어, 주사위·카드 연출, 효과음 설정을 메인 화면에서 별도 설정 페이지로 이동
+- 메인 화면 우상단 톱니바퀴 아이콘으로 접근
+- 메인 화면 구성이 더 단순해졌습니다
+```
+
+**English (500 chars max)**
+```
+A brand-new Settings screen!
+
+- Language, dice/card animation, and sound settings moved to a dedicated Settings page
+- Access it via the gear icon at the top right of the main screen
+- The main screen is now simpler and cleaner
+```
+
+### 변경 사항 / Changes
+- 언어(한국어/English), 주사위·카드 연출, 효과음 설정을 메인 화면에서 별도 설정 페이지(SettingsScreen)로 이동
+- 메인 화면 우상단에 설정 아이콘 추가, 난이도 선택과 주요 버튼만 남겨 화면 단순화
+- 설정 화면에서 언어를 바꾸면 메인 화면으로 돌아올 때 즉시 반영
+
+### 빌드
+- versionCode: 3
+- versionName: 1.2.0
+- AAB: `~/Documents/workspace/apk_build_files/football_dice/v1.2.0/app-release.aab`
+
+---
+
 ## v1.1.0 (2026-07-19)
 
 ### Play Console 릴리즈 노트 (What's new)
